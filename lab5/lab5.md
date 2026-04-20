@@ -178,4 +178,57 @@ void main(){
 ![image-20260420175227873](./images/image-20260420175227873.png)
 
 比如在vs code中的终端打开，每次访问到底将是随机垃圾值。本质上是对越界指针的处理方式不同导致的。
-
+## (3)
+>虽然并不知道为什么会有这一问，，  
+处理方式是通过右-下-左-上四个方向为周期循环处理，通过构造两个新的vector<vector<int>>来分别存储数值及坐标。  
+假如进行正向遍历后到达尽头，则取消反向遍历
+```cpp
+#include <vector>
+using namespace std;
+class Solution{
+public:
+    vector<vector<int>> matrix;//通过O(mn)的时间复杂度预处理出每个数在矩阵中的位置
+    vector<vector<int>> pos;//用以存储每个数在矩阵中的位置
+    Solution(int m, int n){
+        matrix = vector<vector<int>>(m, vector<int>(n));
+        pos = vector<vector<int>>(m*n, vector<int>(2));
+        int top=0,bottom=m-1,left=0,right=n-1,val=0;
+        while(top<=bottom && left<=right){
+            for(int i=left;i<=right;i++){
+                matrix[top][i]=val;
+                pos[val]={top,i};
+                val++;
+            }
+            top++;
+            for(int i=top;i<=bottom;i++){
+                matrix[i][right]=val;
+                pos[val]={i,right};
+                val++;
+            }
+            right--;
+            if(top<=bottom){
+                for(int i=right;i>=left;i--){
+                    matrix[bottom][i]=val;
+                    pos[val]={bottom,i};
+                    val++;
+                }
+                bottom--;
+            }
+            if(left<=right){
+                for(int i=bottom;i>=top;i--){
+                    matrix[i][left]=val;
+                    pos[val]={i,left};
+                    val++;
+                }
+                left++;
+            }
+        }
+    }
+    int findAtIndex(int i,int j){
+        return matrix[i][j];
+    }
+    vector<int> findIndex(int i){
+        return pos[i];
+    }
+};
+```
