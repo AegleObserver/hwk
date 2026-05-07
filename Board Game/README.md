@@ -5,14 +5,43 @@
 当前项目包含以下游戏模式：
 
 - Reversi（黑白棋）
-- Peace 模式（Reversi 的无翻转练习模式）
+- Peace 模式
 - Minesweeper（扫雷）
+- Chess （国际象棋）
 
 ## 环境要求
 
 - JDK 21
 - Maven 3.x
 - Windows 环境下可直接运行图形窗口
+
+### 在终端中检查环境
+
+在 Windows 中打开 `cmd`，执行以下命令检查 Java 和 Maven 是否已经安装：
+
+```cmd
+java -version
+mvn -version
+```
+
+如果 `java -version` 输出的版本不是 21，或提示 `java` 不是内部或外部命令，请安装 JDK 21：
+
+```cmd
+winget install EclipseAdoptium.Temurin.21.JDK
+```
+
+如果 `mvn -version` 没有输出 Maven 版本，或提示 `mvn` 不是内部或外部命令，请安装 Maven：
+
+```cmd
+winget install Apache.Maven
+```
+
+安装完成后，重新打开 `cmd`，再次执行 `java -version` 和 `mvn -version`。确认 Java 版本为 21，Maven 版本为 3.x 后，再运行本项目。
+
+如果电脑没有 `winget`，可以手动下载安装：
+
+- JDK 21：https://adoptium.net/temurin/releases/?version=21
+- Maven：https://maven.apache.org/download.cgi
 
 ## 运行方式
 

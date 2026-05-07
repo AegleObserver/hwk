@@ -48,7 +48,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>Reversi</mainClass>
+                    <mainClass>common.Reversi</mainClass>
                 </configuration>
             </plugin>
 
@@ -63,7 +63,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>Reversi</mainClass>
+                            <mainClass>common.Reversi</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
