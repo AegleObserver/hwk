@@ -102,7 +102,7 @@ public class ChessGame implements GameSession {
 
     @Override
     public String getPlayersSummary() {
-        return " P1:White\n P2:Black";
+        return " P1:Hikari\n P2:Tairitsu";
     }
 
 
@@ -110,21 +110,21 @@ public class ChessGame implements GameSession {
     @Override
     public String getStatusSummary() {
         if (finished) {
-            return " Winner: " + (winner == 'W' ? "White" : "Black");
+            return " Winner: " + (winner == 'W' ? "Hikari" : "Tairitsu");
         }
         StringConstructer sc = new StringConstructer();
-        sc.append(" Current: ").append(currentPlayer == 'W' ? "White" : "Black");
+        sc.append(" Current: ").append(currentPlayer == 'W' ? "Hikari" : "Tairitsu");
         boolean whiteInCheck = isKingInCheck('W');
         boolean blackInCheck = isKingInCheck('B');
-        if (whiteInCheck) sc.append('\n').append("Check: White");
-        if (blackInCheck) sc.append('\n').append("Check: Black");
+        if (whiteInCheck) sc.append('\n').append("Check: Hikari");
+        if (blackInCheck) sc.append('\n').append("Check: Tairitsu");
         return sc.toString();
     }
 
     @Override
     public String getFinishSummary() {
         if (!finished) return "";
-        return (winner == 'W' ? "White" : "Black") + " wins by capturing the king.";
+        return (winner == 'W' ? "Hikari" : "Tairitsu") + " wins by capturing the king.";
     }
 
    @Override

@@ -439,7 +439,7 @@ public class TerminalUI {
             updateScoreDisplay();
             updateBoardIndexDisplay();
             if (isGameFinished(games[targetIndex])) {
-                messageLabel.setText("Info: switched to board " + input.value + " (finished, view only).");
+                messageLabel.setText("Info: switched to board " + input.value + " \n(finished, view only).");
                 messageLabel.setForegroundColor(TextColor.ANSI.YELLOW);
             } else {
                 messageLabel.setText("Info: switched to board " + input.value + ".");
@@ -467,7 +467,7 @@ public class TerminalUI {
                 return true;
             case INVALID_INPUT:
                 if ("Chess".equalsIgnoreCase(currentGame().getDisplayName())) {
-                    messageLabel.setText("Err: invalid input. Enter m A1-H8 A1-H8 instead.");
+                    messageLabel.setText("Err: invalid input.\n Enter m A1-H8 A1-H8 instead.");
                 } else {
                     messageLabel.setText("Err: invalid input. Enter A1-" + (char)('A' + currentBoardSize() - 1) + currentBoardSize() + " instead.");
                 }
