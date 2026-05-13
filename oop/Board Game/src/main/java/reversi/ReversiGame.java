@@ -1,6 +1,7 @@
 package reversi;
 
 import common.BoardView;
+import common.GameAction;
 import common.GameSession;
 import common.TurnResult;
 import java.util.ArrayDeque;
@@ -14,6 +15,7 @@ public class ReversiGame implements GameSession {
     private int blackCount;
     private int whiteCount;
     private final Deque<GameSnapshot> history;
+    private final ReversiDemoDebugger demoDebugger;
 
     private static class GameSnapshot {
         final char[][] boardState;
@@ -28,6 +30,7 @@ public class ReversiGame implements GameSession {
     public ReversiGame(int size) {
         this.board = new Board(size);
         this.history = new ArrayDeque<GameSnapshot>();
+        this.demoDebugger = new ReversiDemoDebugger(board.getSize());
         init();
     }
 
@@ -122,6 +125,31 @@ public class ReversiGame implements GameSession {
         if (blackCount > whiteCount) return "Winner: Tairitsu";
         if (whiteCount > blackCount) return "Winner: Hikari";
         return "Winner: NOBODY";
+    }
+
+    @Override
+    public boolean isDemoDebuggerAvailable() {
+        return ReversiDemoDebugger.isEnabled();
+    }
+
+    @Override
+    public boolean isDemoDebuggerRecording() {
+        return demoDebugger.isRecording();
+    }
+
+    @Override
+    public void startDemoDebugger() {
+        demoDebugger.start();
+    }
+
+    @Override
+    public void recordDemoDebuggerStep(String rawInput, GameAction action, TurnResult result) {
+        demoDebugger.record(rawInput, action, result);
+    }
+
+    @Override
+    public String finishDemoDebuggerIfSuccessful() {
+        return demoDebugger.finishIfSuccessful(board.isFull());
     }
 
     @Override

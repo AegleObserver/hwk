@@ -4,22 +4,30 @@ import common.BoardView;
 import common.GameAction;
 import common.GameSession;
 import common.TurnResult;
-import java.util.ArrayList;
 import java.util.ArrayDeque;
-import java.util.List;
 import java.util.Deque;
+import java.util.List;
 
 public class MinesweeperGame implements GameSession {
     private static final int TOTAL_MINES_HINT = 10;
+    private static final long DEMO_SEED = 1778639585876L;
 
     private final MinesweeperBoard board;
     private final BoardView boardView;
     private final Deque<String[][]> history;
+    private final long seed;
+    private final MinesweeperDemoDebugger demoDebugger;
 
     public MinesweeperGame(int boardSize) {
-        this.board = new MinesweeperBoard();
+        this(System.currentTimeMillis());
+    }
+
+    private MinesweeperGame(long seed) {
+        this.seed = seed;
+        this.board = new MinesweeperBoard(seed);
         this.boardView = new MinesweeperBoardAdapter(board);
         this.history = new ArrayDeque<String[][]>();
+        this.demoDebugger = new MinesweeperDemoDebugger(seed, board.getSize());
     }
 
     @Override
@@ -75,6 +83,11 @@ public class MinesweeperGame implements GameSession {
         String input = rawInput.trim().toUpperCase();
         if ("H".equals(input)) {
             return useHint();
+        }
+        if (input.startsWith("FLAG ")) {
+            int[] position = parseCoordinate(input.substring(5));
+            if (position == null) return TurnResult.INVALID_INPUT;
+            return toggleFlagAt(position[0], position[1]);
         }
         int[] position = parseCoordinate(input);
         if (position == null) return TurnResult.INVALID_INPUT;
@@ -197,23 +210,58 @@ public class MinesweeperGame implements GameSession {
     }
 
     @Override
+    public boolean isDemoDebuggerAvailable() {
+        return MinesweeperDemoDebugger.isEnabled();
+    }
+
+    @Override
+    public boolean isDemoDebuggerRecording() {
+        return demoDebugger.isRecording();
+    }
+
+    @Override
+    public void startDemoDebugger() {
+        demoDebugger.start();
+    }
+
+    @Override
+    public void recordDemoDebuggerStep(String rawInput, GameAction action, TurnResult result) {
+        demoDebugger.record(rawInput, action, result);
+    }
+
+    @Override
+    public String finishDemoDebuggerIfSuccessful() {
+        return demoDebugger.finishIfCleared(board.isAllSafeCellsRevealed());
+    }
+
+    @Override
     public List<String> getDemoInputs() {
-        List<String> steps = new ArrayList<String>();
-        int safeCellCount = board.getSize() * board.getSize() - TOTAL_MINES_HINT;
-        for (int i = 0; i < safeCellCount; i++) {
-            steps.add("H");
-        }
-        return steps;
+        // Recorded by MinesweeperDemoDebugger with seed 1778639585876.
+        return List.of(
+            "A3", "A2", "A1", "B1", "B2", "B3", "B4", "A4",
+            "C1", "D1", "D2", "C2", "FLAG C3", "D3", "C4", "D4",
+            "B5", "C5", "D5", "B6", "C6", "D6", "FLAG A5", "A6",
+            "A7", "B7", "FLAG C7", "C8", "FLAG D7", "E3", "F2", "F3",
+            "F4", "E5", "E6", "E7", "FLAG E4", "E2", "FLAG E1", "F1",
+            "G1", "G2", "G3", "H1", "H2", "H3", "H4", "G4",
+            "H5", "H6", "H7", "H8", "G5", "G6", "G7", "G8",
+            "FLAG F5", "F6", "F7", "FLAG F8", "FLAG E8", "D8", "FLAG B8", "A8"
+        );
     }
 
     @Override
     public String getDemoSummary() {
-        return "Minesweeper demo uses hint steps to reveal safe cells.";
+        return "Minesweeper demo uses a recorded seed and a human-played route with flags.";
     }
 
     @Override
     public GameSession newGame(int boardSize) {
         return new MinesweeperGame(boardSize);
+    }
+
+    @Override
+    public GameSession newDemoGame(int boardSize) {
+        return new MinesweeperGame(DEMO_SEED);
     }
 
     private int[] parseCoordinate(String rawInput) {

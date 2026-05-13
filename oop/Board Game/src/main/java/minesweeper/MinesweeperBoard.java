@@ -16,12 +16,20 @@ public class MinesweeperBoard implements MinesweeperBoardView {
         this(FIXED_SIZE, DEFAULT_MINE_COUNT);
     }
 
+    public MinesweeperBoard(long seed) {
+        this(FIXED_SIZE, DEFAULT_MINE_COUNT, new Random(seed));
+    }
+
     public MinesweeperBoard(int size, int mineCount) {
+        this(size, mineCount, new Random());
+    }
+
+    private MinesweeperBoard(int size, int mineCount, Random random) {
         this.size = FIXED_SIZE;
         this.mineCount = DEFAULT_MINE_COUNT;
         this.cells = new String[FIXED_SIZE][FIXED_SIZE];
         this.answer = new String[FIXED_SIZE][FIXED_SIZE];
-        this.random = new Random();
+        this.random = random;
         initialize();
     }
 

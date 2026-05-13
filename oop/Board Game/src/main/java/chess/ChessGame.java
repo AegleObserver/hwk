@@ -3,6 +3,7 @@ package chess;
 import common.StringConstructer;
 
 import common.BoardView;
+import common.GameAction;
 import common.GameSession;
 import common.TurnResult;
 import java.util.ArrayDeque;
@@ -15,10 +16,12 @@ public class ChessGame implements GameSession {
     private char currentPlayer;
     private boolean finished;
     private char winner;
+    private final ChessDemoDebugger demoDebugger;
 
     public ChessGame(int boardSize) {
         this.board = new ChessBoard(boardSize);
         this.history = new ArrayDeque<ChessSnapshot>();
+        this.demoDebugger = new ChessDemoDebugger();
         this.currentPlayer = 'W';
         this.finished = false;
         this.winner = '\0';
@@ -125,6 +128,31 @@ public class ChessGame implements GameSession {
     public String getFinishSummary() {
         if (!finished) return "";
         return (winner == 'W' ? "Hikari" : "Tairitsu") + " wins by capturing the king.";
+    }
+
+    @Override
+    public boolean isDemoDebuggerAvailable() {
+        return ChessDemoDebugger.isEnabled();
+    }
+
+    @Override
+    public boolean isDemoDebuggerRecording() {
+        return demoDebugger.isRecording();
+    }
+
+    @Override
+    public void startDemoDebugger() {
+        demoDebugger.start();
+    }
+
+    @Override
+    public void recordDemoDebuggerStep(String rawInput, GameAction action, TurnResult result) {
+        demoDebugger.record(rawInput, action, result);
+    }
+
+    @Override
+    public String finishDemoDebuggerIfSuccessful() {
+        return demoDebugger.finishIfSuccessful(isFinished());
     }
 
    @Override

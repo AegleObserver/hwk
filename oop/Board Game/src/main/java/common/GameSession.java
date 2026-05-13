@@ -52,7 +52,29 @@ public interface GameSession {
         return Collections.emptyList();
     }
 
+    default GameSession newDemoGame(int boardSize) {
+        return newGame(boardSize);
+    }
+
     default String getDemoSummary() {
+        return "";
+    }
+
+    default boolean isDemoDebuggerAvailable() {
+        return false;
+    }
+
+    default boolean isDemoDebuggerRecording() {
+        return false;
+    }
+
+    default void startDemoDebugger() {
+    }
+
+    default void recordDemoDebuggerStep(String rawInput, GameAction action, TurnResult result) {
+    }
+
+    default String finishDemoDebuggerIfSuccessful() {
         return "";
     }
 

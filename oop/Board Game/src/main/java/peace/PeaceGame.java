@@ -1,6 +1,7 @@
 package peace;
 
 import common.BoardView;
+import common.GameAction;
 import common.GameSession;
 import common.TurnResult;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class PeaceGame implements GameSession {
     private final Board board;
     private char currentPlayer;
     private final Deque<GameSnapshot> history;
+    private final PeaceDemoDebugger demoDebugger;
 
     private static class GameSnapshot {
         final char[][] boardState;
@@ -27,6 +29,7 @@ public class PeaceGame implements GameSession {
     public PeaceGame(int boardSize) {
         this.board = new Board(boardSize);
         this.history = new ArrayDeque<GameSnapshot>();
+        this.demoDebugger = new PeaceDemoDebugger(board.getSize());
         initBlankBoard();
     }
 
@@ -107,6 +110,31 @@ public class PeaceGame implements GameSession {
     @Override
     public String getFinishSummary() {
         return "";
+    }
+
+    @Override
+    public boolean isDemoDebuggerAvailable() {
+        return PeaceDemoDebugger.isEnabled();
+    }
+
+    @Override
+    public boolean isDemoDebuggerRecording() {
+        return demoDebugger.isRecording();
+    }
+
+    @Override
+    public void startDemoDebugger() {
+        demoDebugger.start();
+    }
+
+    @Override
+    public void recordDemoDebuggerStep(String rawInput, GameAction action, TurnResult result) {
+        demoDebugger.record(rawInput, action, result);
+    }
+
+    @Override
+    public String finishDemoDebuggerIfSuccessful() {
+        return demoDebugger.finishIfSuccessful(isFinished());
     }
 
     @Override

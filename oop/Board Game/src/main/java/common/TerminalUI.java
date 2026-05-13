@@ -259,6 +259,9 @@ public class TerminalUI {
             messageLabel.setForegroundColor(TextColor.ANSI.CYAN);
         }));
         inputPanel.addComponent(new Button("Demo", this::startCurrentGameDemo));
+        if (hasDemoDebuggerAvailable()) {
+            inputPanel.addComponent(new Button("DemoDbg", this::startDemoDebugger));
+        }
         inputPanel.addComponent(messageLabel);
         mainPanel.addComponent(inputPanel, BorderLayout.Location.BOTTOM);
         refreshActionButtons();
@@ -456,6 +459,7 @@ public class TerminalUI {
     private boolean processMove(String rawInput) {
         if (rejectDuringDemo()) return false;
         TurnResult result = currentGame().handleRawInput(translateCoordinateInput(rawInput));
+        currentGame().recordDemoDebuggerStep(rawInput, null, result);
         switch (result) {
             case SUCCESS:
                 updateBoardDisplay();
@@ -498,6 +502,7 @@ public class TerminalUI {
                 messageLabel.setForegroundColor(TextColor.ANSI.YELLOW);
                 return true;
             case GAME_OVER:
+                finishDemoDebuggerIfNeeded();
                 handleCurrentBoardFinished();
                 return true;
             default:
@@ -545,6 +550,7 @@ public class TerminalUI {
         }
 
         TurnResult result = currentGame().handleAction(action, translateCoordinateInput(inputBox.getText()));
+        currentGame().recordDemoDebuggerStep(input, action, result);
         switch (result) {
             case SUCCESS:
                 updateBoardDisplay();
@@ -573,6 +579,7 @@ public class TerminalUI {
                 return false;
             case GAME_OVER:
                 updateBoardDisplay();
+                finishDemoDebuggerIfNeeded();
                 handleCurrentBoardFinished();
                 return true;
             default:
@@ -669,6 +676,39 @@ public class TerminalUI {
         return true;
     }
 
+    private boolean hasDemoDebuggerAvailable() {
+        for (int i = 0; i < currentGameCount; i++) {
+            if (games[i] != null && games[i].isDemoDebuggerAvailable()) return true;
+        }
+        return false;
+    }
+
+    private void startDemoDebugger() {
+        if (rejectDuringDemo()) return;
+        if (!currentGame().isDemoDebuggerAvailable()) {
+            messageLabel.setText("Err: demo debugger is disabled for this game.");
+            messageLabel.setForegroundColor(TextColor.ANSI.YELLOW);
+            return;
+        }
+        games[activeGameIndex] = currentGame().newGame(8);
+        currentGame().startDemoDebugger();
+        rebuildBoardPanel();
+        updateGameInfoDisplay();
+        exhibitPlayers();
+        updateScoreDisplay();
+        updateBoardIndexDisplay();
+        inputBox.setText("");
+        messageLabel.setText("Info: demo debugger recording started.");
+        messageLabel.setForegroundColor(TextColor.ANSI.CYAN);
+    }
+
+    private void finishDemoDebuggerIfNeeded() {
+        if (!currentGame().isDemoDebuggerRecording()) return;
+        String result = currentGame().finishDemoDebuggerIfSuccessful();
+        if (result == null || result.isEmpty()) return;
+        MessageDialog.showMessageDialog(gui, "Demo Debugger", result, MessageDialogButton.OK);
+    }
+
     private void startCurrentGameDemo() {
         // If demo is running, toggle pause/resume
         if (demoRunning) {
@@ -701,7 +741,7 @@ public class TerminalUI {
 
     private void runCurrentGameDemo() {
         int boardSize = currentGame().getBoard().getSize();
-        games[activeGameIndex] = currentGame().newGame(boardSize);
+        games[activeGameIndex] = currentGame().newDemoGame(boardSize);
         rebuildBoardPanel();
         updateGameInfoDisplay();
         exhibitPlayers();
@@ -791,6 +831,9 @@ public class TerminalUI {
         if ("Chess".equalsIgnoreCase(currentGame().getDisplayName())) return input;
         if (input.length() == 1) return input;
         if ("AUTO".equals(input)) return input;
+        if (input.startsWith("FLAG ")) {
+            return "FLAG " + translateCoordinateInput(input.substring(5));
+        }
 
         char file = input.charAt(0);
         if (!Character.isLetter(file)) return input;
