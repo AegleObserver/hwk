@@ -55,18 +55,15 @@
    - 用来记录不同棋子的落子规则，同时保留了一些特殊规则的实现。
  - ChessRuleSupport.java
    - 用来实现游戏的落子规则。
-<<<<<<< HEAD
 >> 开发者使用
  - MinesweeperDemoDebugger.java
    - 维护的 Boolean 类型变量 DebuggerEnabled 默认为 false ，修改为 true 后则可通过录制操作更改游戏的 Demo 预处理指令(其他游戏同理)
-=======
 > Demo 调试器说明
  - MinesweeperDemoDebugger.java / ChessDemoDebugger.java / ReversiDemoDebugger.java / PeaceDemoDebugger.java
     - 每个游戏均配有 Demo 调试器，用于录制和回放操作序列。
     - 各调试器中维护了一个 `DebuggerEnabled` 布尔变量（默认为 `false`），修改为 `true` 后，启动界面会出现 "DemoDbg" 按钮。
     - 点击 "DemoDbg" 按钮进入录制模式，此后对当前棋盘的所有操作均会被记录。
     - 当局结束时，若录制过程中未出现非法操作，则会弹窗输出生成的 Demo 预处理指令字符串，开发者可将其复制到 `getDemoInputs()` 方法中以固化演示剧本。
->>>>>>> 77ca9c67a6e2fff092a54aa7c73861921b36371b
 
 # 4.构建与运行方式
 ## 环境要求
