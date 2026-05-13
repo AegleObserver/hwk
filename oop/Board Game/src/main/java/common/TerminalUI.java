@@ -20,7 +20,7 @@ import javax.swing.UIManager;
 public class TerminalUI {
     private static final int FONT_SIZE = 26;//控制字体大小
     private static final int INITIAL_GAMES = 4;
-    private static final int MAX_ALLOWED_GAMES = 5;
+    private static final int MAX_ALLOWED_GAMES = 10;
     private int cellWidthChars = 1;
     private int cellHeightChars = 1;
     private final GameSession[] games = new GameSession[MAX_ALLOWED_GAMES];
@@ -358,15 +358,28 @@ public class TerminalUI {
 
     private void updateGameInfoDisplay() {
         String summary = currentGame().getStatusSummary();
+        String commands = buildCommandsInfo();
+        StringConstructer sc = new StringConstructer();
+        sc.append(" Game ").append(String.valueOf(activeGameIndex + 1)).append(' ').append(currentGame().getDisplayName()).append('\n');
         if (summary == null || summary.isEmpty()) {
-            gameInfoLabel.setText(" Game " + (activeGameIndex + 1) + " " + currentGame().getDisplayName());
+            sc.append('\n');
         } else {
-            StringConstructer sc = new StringConstructer();
-            sc.append(" Game ").append(String.valueOf(activeGameIndex + 1)).append(' ').append(currentGame().getDisplayName()).append('\n');
-            sc.append(summary);
-            gameInfoLabel.setText(sc.toString());
+            sc.append(summary).append('\n');
         }
+        sc.append('\n').append("Commands").append('\n').append(commands);
+        gameInfoLabel.setText(sc.toString());
         refreshActionButtons();
+    }
+
+    private String buildCommandsInfo() {
+        boolean isMinesweeper = "Minesweeper".equalsIgnoreCase(currentGame().getDisplayName());
+        boolean isChessBoard = "Chess".equalsIgnoreCase(currentGame().getDisplayName());
+        StringConstructer sc = new StringConstructer();
+        sc.append(isMinesweeper ? "Input 'H' to get hint\n" : "Input 'U' to undo\n");
+        sc.append(isChessBoard ? "Input m A1-H8 A1-H8 to move\n" : "Input A1-H8 to move\n");
+        sc.append("Input 1-").append(String.valueOf(currentGameCount)).append(" to switch games\n");
+        sc.append("Input 'Q' to quit.");
+        return sc.toString();
     }
 
     private void updateScoreDisplay() {
