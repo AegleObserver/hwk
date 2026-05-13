@@ -361,7 +361,7 @@ public class TerminalUI {
         if (summary == null || summary.isEmpty()) {
             gameInfoLabel.setText(" Game " + (activeGameIndex + 1) + " " + currentGame().getDisplayName());
         } else {
-            StringConstructer sc = new StringConstructer();
+            StringConstructor sc = new StringConstructor();
             sc.append(" Game ").append(String.valueOf(activeGameIndex + 1)).append(' ').append(currentGame().getDisplayName()).append('\n');
             sc.append(summary);
             gameInfoLabel.setText(sc.toString());
@@ -374,7 +374,7 @@ public class TerminalUI {
     }
 
     private void updateBoardIndexDisplay() {
-        StringConstructer sc = new StringConstructer();
+        StringConstructor sc = new StringConstructor();
         for (int i = 0; i < currentGameCount; i++) {
             sc.append(String.valueOf(i + 1)).append(".").append(games[i].getDisplayName());
             if (i == activeGameIndex) sc.append(" <- current");
@@ -398,7 +398,7 @@ public class TerminalUI {
 
     private static String spaces(int n) {
         if (n <= 0) return "";
-        StringConstructer sc = new StringConstructer(n);
+        StringConstructor sc = new StringConstructor(n);
         for (int i = 0; i < n; i++) sc.append(' ');
         return sc.toString();
     }//生成 n 个空格的字符串
@@ -414,7 +414,7 @@ public class TerminalUI {
         if (height == 1) return line;
         int top = (height - 1) / 2;
         int bottom = height - 1 - top;
-        StringConstructer full = new StringConstructer();
+        StringConstructor full = new StringConstructor();
         for (int i = 0; i < top; i++) { full.append(spaces(width)); full.append('\n'); }
         full.append(line);
         for (int i = 0; i < bottom; i++) { full.append('\n'); full.append(spaces(width)); }

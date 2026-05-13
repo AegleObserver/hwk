@@ -130,7 +130,7 @@ java -jar target/reversi-1.0-SNAPSHOT-jar-with-dependencies.jar
 - MinesweeperBoardView.java：扫雷棋盘显示接口
 - ProcessInput.java：输入解析
 - TurnResult.java：操作结果枚举
-- StringConstructer.java：字符串拼接辅助类
+- StringConstructor.java：字符串拼接辅助类
 
 ## 说明
 

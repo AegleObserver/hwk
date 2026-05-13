@@ -1,6 +1,6 @@
 package reversi;
 
-import common.StringConstructer;
+import common.StringConstructor;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -214,7 +214,7 @@ public class Board implements ReversiBoardView {
 
     @Override
     public String toAsciiString(char currentPlayer) {
-        StringConstructer sc = new StringConstructer();
+        StringConstructor sc = new StringConstructor();
         Set<Integer> legalMoves = legalMovesCache.get(currentPlayer);
         sc.append("  ");
         for (char c = 'A'; c < 'A' + size; c++) sc.append(' ').append(c);
