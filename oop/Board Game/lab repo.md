@@ -27,7 +27,7 @@
    - 抽象棋盘视图接口，提供 `getSize()`、`getCell()` 等方法，供 UI 与规则类查询盘面。
  - ProcessInput.java
    - 全局输入解析器，负责将用户原始输入分类为 `QUIT/UNDO/SWITCH_BOARD` 等通用命令。
- - StringConstructer.java
+ - StringConstructor.java
    - 简单的字符串构建辅助类，用于在 UI 中拼接多行文本，替代直接使用 `StringBuilder`。
  - TerminalUI.java
    - 主界面驱动，负责布局、渲染棋盘、处理用户输入、触发 Demo 播放与按键交互。
@@ -36,7 +36,7 @@
 
 > chess 细分实现
  - ProcessInputInChess.java
-   - 将棋类专用的落子格式解析为内部行列坐标，并按过期想起棋盘规范转换为内部索引。
+   - 将棋类专用的落子格式解析为内部行列坐标，并按照国际象棋棋盘规范转换为内部索引。
  - SpecialMoveRule.java
    - 处理 王车易位/吃过路兵/升变 等特殊走法的识别与判定。
  - PawnRule.java / KnightRule.java / BishopRule.java / RookRule.java / QueenRule.java / KingRule.java
@@ -55,11 +55,35 @@
    - 用来记录不同棋子的落子规则，同时保留了一些特殊规则的实现。
  - ChessRuleSupport.java
    - 用来实现游戏的落子规则。
+<<<<<<< HEAD
 >> 开发者使用
  - MinesweeperDemoDebugger.java
    - 维护的 Boolean 类型变量 DebuggerEnabled 默认为 false ，修改为 true 后则可通过录制操作更改游戏的 Demo 预处理指令(其他游戏同理)
+=======
+> Demo 调试器说明
+ - MinesweeperDemoDebugger.java / ChessDemoDebugger.java / ReversiDemoDebugger.java / PeaceDemoDebugger.java
+    - 每个游戏均配有 Demo 调试器，用于录制和回放操作序列。
+    - 各调试器中维护了一个 `DebuggerEnabled` 布尔变量（默认为 `false`），修改为 `true` 后，启动界面会出现 "DemoDbg" 按钮。
+    - 点击 "DemoDbg" 按钮进入录制模式，此后对当前棋盘的所有操作均会被记录。
+    - 当局结束时，若录制过程中未出现非法操作，则会弹窗输出生成的 Demo 预处理指令字符串，开发者可将其复制到 `getDemoInputs()` 方法中以固化演示剧本。
+>>>>>>> 77ca9c67a6e2fff092a54aa7c73861921b36371b
 
-# 4.国际象棋规则说明(参考资料：[click-here](https://zh.wikipedia.org/wiki/%E5%9C%8B%E9%9A%9B%E8%B1%A1%E6%A3%8B))
+# 4.构建与运行方式
+## 环境要求
+- JDK 21
+- Maven 3.x
+## 运行方式
+在项目根目录下执行：
+```bash
+mvn clean compile exec:java
+```
+或先打包再运行：
+```bash
+mvn clean package
+java -jar target/reversi-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
+# 5.国际象棋规则说明(参考资料：[click-here](https://zh.wikipedia.org/wiki/%E5%9C%8B%E9%9A%9B%E8%B1%A1%E6%A3%8B))
 ___
 ## 普通行棋规则
 ### 王（**K**ing）
@@ -88,7 +112,7 @@ ___
    - 当国王被将军时。
    - 国王和参与易位的车之间有棋子。
    - 国王所在的格，或易位时国王将要经过的格，或易位后国王将占据的格，正在受到对方一个或数个棋子的进攻。
-# 5.多对局与动态新增流程截图
+# 6.多对局与动态新增流程截图
 ## 1) 开局界面变化
 将游戏初始化为：1.Peace 2.Reversi 3.Minesweeper 4.Chess   
 鉴于新增的 Chess 类游戏有专门的坐标编号规范，对棋盘的标注进行了一定的重构；
@@ -145,7 +169,7 @@ ___
 
 ![9](./images/9.png)
 
-# 6.Demo 模式的流程截图(以 Chess 游戏为例)
+# 7.Demo 模式的流程截图(以 Chess 游戏为例)
 此游戏的 Demo 模式参考的是国际象棋中较为知名的牧羊人的陷阱，兼顾基本走法展示与过程简洁两点。
 ## 1) Demo 模式启动
 

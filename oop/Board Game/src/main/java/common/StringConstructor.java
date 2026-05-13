@@ -1,22 +1,22 @@
 package common;
 
-public class StringConstructer {
+public class StringConstructor {
     private final StringBuilder delegate;
 
-    public StringConstructer() {
+    public StringConstructor() {
         this.delegate = new StringBuilder();
     }
 
-    public StringConstructer(int capacity) {
+    public StringConstructor(int capacity) {
         this.delegate = new StringBuilder(capacity);
     }
 
-    public StringConstructer append(char c) {
+    public StringConstructor append(char c) {
         delegate.append(c);
         return this;
     }
 
-    public StringConstructer append(CharSequence cs) {
+    public StringConstructor append(CharSequence cs) {
         delegate.append(cs);
         return this;
     }

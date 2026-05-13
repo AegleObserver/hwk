@@ -1,7 +1,7 @@
 package minesweeper;
 
 import common.BoardView;
-import common.StringConstructer;
+import common.StringConstructor;
 
 public class MinesweeperBoardAdapter implements BoardView {
     private final MinesweeperBoardView board;
@@ -48,7 +48,7 @@ public class MinesweeperBoardAdapter implements BoardView {
 
     @Override
     public String toAsciiString() {
-        StringConstructer sc = new StringConstructer();
+        StringConstructor sc = new StringConstructor();
         for (int row = 0; row < board.getSize(); row++) {
             for (int col = 0; col < board.getSize(); col++) {
                 sc.append(getCell(row, col));

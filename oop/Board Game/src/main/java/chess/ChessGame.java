@@ -1,6 +1,6 @@
 package chess;
 
-import common.StringConstructer;
+import common.StringConstructor;
 
 import common.BoardView;
 import common.GameAction;
@@ -115,7 +115,7 @@ public class ChessGame implements GameSession {
         if (finished) {
             return " Winner: " + (winner == 'W' ? "Hikari" : "Tairitsu");
         }
-        StringConstructer sc = new StringConstructer();
+        StringConstructor sc = new StringConstructor();
         sc.append(" Current: ").append(currentPlayer == 'W' ? "Hikari" : "Tairitsu");
         boolean whiteInCheck = isKingInCheck('W');
         boolean blackInCheck = isKingInCheck('B');

