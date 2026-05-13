@@ -139,3 +139,5 @@ ret
 最终得到的shellcode如下：
 
 ![20](./images/20.png)
+
+![21](./images/21.png)
