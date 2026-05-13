@@ -359,19 +359,12 @@ public class TerminalUI {
     private void updateGameInfoDisplay() {
         String summary = currentGame().getStatusSummary();
         String commands = buildCommandsInfo();
-        StringConstructer sc = new StringConstructer();
+        StringConstructor sc = new StringConstructor();
         sc.append(" Game ").append(String.valueOf(activeGameIndex + 1)).append(' ').append(currentGame().getDisplayName()).append('\n');
         if (summary == null || summary.isEmpty()) {
             sc.append('\n');
         } else {
-<<<<<<< HEAD
-            sc.append(summary).append('\n');
-=======
-            StringConstructor sc = new StringConstructor();
-            sc.append(" Game ").append(String.valueOf(activeGameIndex + 1)).append(' ').append(currentGame().getDisplayName()).append('\n');
             sc.append(summary);
-            gameInfoLabel.setText(sc.toString());
->>>>>>> 77ca9c67a6e2fff092a54aa7c73861921b36371b
         }
         sc.append('\n').append("Commands").append('\n').append(commands);
         gameInfoLabel.setText(sc.toString());
@@ -381,7 +374,7 @@ public class TerminalUI {
     private String buildCommandsInfo() {
         boolean isMinesweeper = "Minesweeper".equalsIgnoreCase(currentGame().getDisplayName());
         boolean isChessBoard = "Chess".equalsIgnoreCase(currentGame().getDisplayName());
-        StringConstructer sc = new StringConstructer();
+        StringConstructor sc = new StringConstructor();
         sc.append(isMinesweeper ? "Input 'H' to get hint\n" : "Input 'U' to undo\n");
         sc.append(isChessBoard ? "Input m A1-H8 A1-H8 to move\n" : "Input A1-H8 to move\n");
         sc.append("Input 1-").append(String.valueOf(currentGameCount)).append(" to switch games\n");
