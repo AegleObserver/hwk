@@ -1,0 +1,29 @@
+package chess;
+
+import common.BoardView;
+
+public final class QueenRule {
+    private QueenRule() {
+    }
+
+    public static boolean isLegalMove(BoardView board, ProcessInputInChess move, char player) {
+        if (move == null) return false;
+        return isLegalMove(board, move.fromRow, move.fromCol, move.toRow, move.toCol, player);
+    }
+
+    public static boolean isLegalMove(BoardView board, int fromRow, int fromCol, int toRow, int toCol, char player) {
+        if (!ChessRuleSupport.inBounds(board, fromRow, fromCol) || !ChessRuleSupport.inBounds(board, toRow, toCol)) return false;
+
+        char piece = board.getCell(fromRow, fromCol);
+        if (!ChessRuleSupport.isPlayersPiece(piece, player, 'Q', 'q')) return false;
+
+        int rowDelta = Math.abs(toRow - fromRow);
+        int colDelta = Math.abs(toCol - fromCol);
+        boolean straight = fromRow == toRow || fromCol == toCol;
+        boolean diagonal = rowDelta == colDelta && rowDelta != 0;
+        if (!straight && !diagonal) return false;
+        if (!ChessRuleSupport.pathClearStraight(board, fromRow, fromCol, toRow, toCol)) return false;
+
+        return !ChessRuleSupport.isFriendlyPiece(board.getCell(toRow, toCol), player);
+    }
+}
